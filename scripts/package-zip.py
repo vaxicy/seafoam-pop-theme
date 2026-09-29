@@ -16,11 +16,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
-DEFAULT_OUT = ROOT.parent           # d:\迅雷下载\vibe coding
+# <vibe coding>/Chrome-themes/<theme> -> the default upload folder is two up
+DEFAULT_OUT = ROOT.parent.parent
 INCLUDE = ["manifest.json", "logo/logo.png"]
 
 
 def main():
+    if DEFAULT_OUT.name != "vibe coding":
+        raise SystemExit(f"unexpected default output folder: {DEFAULT_OUT}")
     version = json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))["version"]
     name = f"seafoam-pop-theme-{version}"
     DIST.mkdir(parents=True, exist_ok=True)
