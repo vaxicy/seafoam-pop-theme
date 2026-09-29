@@ -1,6 +1,0 @@
-Seafoam Pop theme: icon, store assets, README and packaging
-
-- logo/logo.png (128) drawn from the manifest palette, wired into manifest icons
-- promo tiles 440x280 + 1400x560 and store description, all manifest-driven
-- 1280x800 store screenshot rendered headlessly from the real browser layout
-- README, non-commercial licence, gitignore/vscodeignore, package script
