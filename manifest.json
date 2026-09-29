@@ -1,0 +1,168 @@
+{
+  "manifest_version": 3,
+  "version": "1.0.0",
+  "name": "Seafoam Pop Theme",
+  "description": "Light and refreshing, perfect for a serene workspace.",
+  "icons": {
+    "128": "logo/logo.png"
+  },
+  "theme": {
+    "colors": {
+      "frame": [
+        77,
+        218,
+        194
+      ],
+      "frame_inactive": [
+        143,
+        198,
+        193
+      ],
+      "toolbar": [
+        241,
+        240,
+        255
+      ],
+      "background_tab": [
+        210,
+        254,
+        243
+      ],
+      "tab_text": [
+        32,
+        63,
+        58
+      ],
+      "tab_background_text": [
+        72,
+        97,
+        94
+      ],
+      "toolbar_button_icon": [
+        91,
+        124,
+        119
+      ],
+      "button_background": [
+        210,
+        254,
+        243
+      ],
+      "omnibox_background": [
+        255,
+        255,
+        255
+      ],
+      "omnibox_text": [
+        32,
+        63,
+        58
+      ],
+      "bookmark_text": [
+        91,
+        124,
+        119
+      ],
+      "ntp_background": [
+        241,
+        240,
+        255
+      ],
+      "ntp_text": [
+        31,
+        48,
+        45
+      ],
+      "ntp_link": [
+        43,
+        46,
+        162
+      ],
+      "frame_incognito": [
+        52,
+        213,
+        185
+      ],
+      "frame_incognito_inactive": [
+        129,
+        191,
+        186
+      ],
+      "background_tab_inactive": [
+        210,
+        254,
+        243
+      ],
+      "background_tab_incognito": [
+        180,
+        253,
+        235
+      ],
+      "background_tab_incognito_inactive": [
+        210,
+        254,
+        243
+      ],
+      "tab_background_text_inactive": [
+        72,
+        97,
+        94
+      ],
+      "tab_background_text_incognito": [
+        72,
+        97,
+        94
+      ],
+      "tab_background_text_incognito_inactive": [
+        72,
+        97,
+        94
+      ],
+      "ntp_header": [
+        31,
+        48,
+        45
+      ],
+      "toolbar_text": [
+        91,
+        124,
+        119
+      ]
+    },
+    "tints": {
+      "buttons": [
+        0.678,
+        1,
+        0.971
+      ],
+      "frame": [
+        0.472,
+        0.656,
+        0.578
+      ],
+      "frame_inactive": [
+        0.485,
+        0.325,
+        0.669
+      ],
+      "frame_incognito": [
+        0.471,
+        0.657,
+        0.52
+      ],
+      "frame_incognito_inactive": [
+        0.487,
+        0.326,
+        0.627
+      ],
+      "background_tab": [
+        0.458,
+        0.957,
+        0.91
+      ]
+    },
+    "properties": {
+      "ntp_logo_alternate": 1
+    }
+  }
+}
