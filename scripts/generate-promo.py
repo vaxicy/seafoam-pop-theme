@@ -13,6 +13,8 @@ Run from the project root:  python3 scripts/generate-promo.py
 
 import json
 import math
+import shutil
+import tempfile
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
@@ -78,10 +80,22 @@ def logo_tile(size, ink, seafoam, mint):
     return t.resize((size * SS, size * SS), Image.LANCZOS)
 
 
+def save_png(img, rel):
+    """Save through a temp file: PIL's save() can throw OSError 22 on this
+    project's non-ASCII folder name (intermittently, which is worse)."""
+    out = Path(rel)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    tmp = Path(tempfile.gettempdir()) / out.name
+    img.convert("RGB").save(tmp, "PNG")
+    shutil.copyfile(tmp, out)
+    print("wrote", out)
+
+
 def chip(img, x, y, size, radius, color, label=None, txt=None, txt_size=15):
+    """Colour swatch - deliberately no outline, per the store art direction."""
     d = ImageDraw.Draw(img)
     d.rounded_rectangle([x, y, x + size, y + size], radius=radius,
-                        fill=tuple(color), outline=(0, 0, 0, 26), width=max(1, SS))
+                        fill=tuple(color))
     if label and txt is not None:
         txt.text((x + size + 16 * SS, y + (size - txt_size * SS) / 2 - 2 * SS),
                  label, font=txt, fill=(60, 78, 76))
@@ -113,11 +127,7 @@ def promo_tile(c):
         x += 46
     assert x - 14 <= right, "promo swatch row overflows"
 
-    img = img.resize((W, H), Image.LANCZOS)
-    out = PROMO / "promo-tile-440x280.png"
-    out.parent.mkdir(parents=True, exist_ok=True)
-    img.convert("RGB").save(out, "PNG")
-    print("wrote", out)
+    save_png(img.resize((W, H), Image.LANCZOS), PROMO / "promo-tile-440x280.png")
 
 
 def marquee(c):
@@ -169,10 +179,7 @@ def marquee(c):
     assert y - 22 <= cy + card_h - 20, "palette rows overflow the card"
     assert cy + card_h <= H - 12, "palette card breaks the bottom margin"
 
-    img = img.resize((W, H), Image.LANCZOS)
-    out = PROMO / "marquee-1400x560.png"
-    img.convert("RGB").save(out, "PNG")
-    print("wrote", out)
+    save_png(img.resize((W, H), Image.LANCZOS), PROMO / "marquee-1400x560.png")
 
 
 DESCRIPTION = """Seafoam Pop is a soft, light Chrome theme for calm, unhurried browsing: a fresh \
