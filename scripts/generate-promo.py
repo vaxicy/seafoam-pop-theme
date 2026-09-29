@@ -175,13 +175,11 @@ def marquee(c):
     print("wrote", out)
 
 
-DESCRIPTION = """Seafoam Pop is a soft, light Chrome theme built for calm, unhurried browsing. A \
-fresh seafoam green frame wraps a pale mint tab strip and a gentle lavender-white \
-toolbar, so the browser feels airy without ever fighting the pages you open.
-
-The palette stays quiet on purpose: deep teal text keeps every label easy to read, \
-while the light surfaces hold still behind your work. If you like a workspace that \
-feels refreshed rather than decorated, this one settles in from the first tab."""
+DESCRIPTION = """Seafoam Pop is a soft, light Chrome theme for calm, unhurried browsing: a fresh \
+seafoam green frame, pale mint tabs and a gentle lavender-white toolbar, all tied \
+together by deep teal text that stays crisp on every light surface. No wallpaper, \
+no gradients, no clutter — just five flat colours that keep the browser quiet \
+behind your work."""
 
 
 def main():
