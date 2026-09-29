@@ -19,6 +19,7 @@ Output: store-assets/screenshots/screenshot-1-browser.png
 
 import json
 import shutil
+import tempfile
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
@@ -95,14 +96,16 @@ def build_html(c):
              display:flex; align-items:center; gap:10px; padding:0 12px; }}
   .omni-icons {{ margin-left:auto; display:flex; align-items:center; gap:10px; }}
   .ntp {{ position:absolute; left:0; right:0; top:85px; bottom:0; background:{ntp}; }}
-  .wordmark {{ position:absolute; left:0; right:0; top:220px; text-align:center;
+  /* coordinates below are relative to .ntp (which starts at y=85), so they are
+     the real-browser window positions minus that 85px toolbar offset */
+  .wordmark {{ position:absolute; left:0; right:0; top:135px; text-align:center;
               font-size:76px; font-weight:700; letter-spacing:-1px;
               color:{WORDMARK}; font-family:Arial, sans-serif; }}
-  .searchbox {{ position:absolute; left:327px; top:352px; width:626px; height:46px;
+  .searchbox {{ position:absolute; left:327px; top:267px; width:626px; height:46px;
                border-radius:23px; background:#FFFFFF; box-shadow:0 1px 6px rgba(32,33,36,.18);
                display:flex; align-items:center; gap:12px; padding:0 16px; }}
   .placeholder {{ flex:1; font-size:14.5px; color:{PLACEHOLDER}; }}
-  .shortcuts {{ position:absolute; left:0; right:0; top:432px; display:flex;
+  .shortcuts {{ position:absolute; left:0; right:0; top:347px; display:flex;
                justify-content:center; gap:66px; }}
   .shortcut {{ width:96px; text-align:center; }}
   .sicon {{ width:48px; height:48px; margin:0 auto 12px; border-radius:50%;
@@ -254,7 +257,12 @@ def main():
                                     device_scale_factor=1)
             page.set_content(html, wait_until="load")
             out = SHOTS / f"{name}.png"
-            page.screenshot(path=str(out))
+            # Playwright writes through its own path handling, which chokes
+            # (OSError 22) on this project's non-ASCII folder name; shoot to a
+            # temp file first and copy with Python's unicode-aware shutil.
+            tmp = Path(tempfile.gettempdir()) / f"seafoam-{name}.png"
+            page.screenshot(path=str(tmp))
+            shutil.copyfile(tmp, out)
             page.close()
             (REFS / f"{name}.html").write_text(html, encoding="utf-8")
             shutil.copyfile(out, REFS / f"{name}.png")

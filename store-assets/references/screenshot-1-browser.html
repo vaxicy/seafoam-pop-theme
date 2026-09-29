@@ -24,14 +24,16 @@
              display:flex; align-items:center; gap:10px; padding:0 12px; }
   .omni-icons { margin-left:auto; display:flex; align-items:center; gap:10px; }
   .ntp { position:absolute; left:0; right:0; top:85px; bottom:0; background:#F1F0FF; }
-  .wordmark { position:absolute; left:0; right:0; top:220px; text-align:center;
+  /* coordinates below are relative to .ntp (which starts at y=85), so they are
+     the real-browser window positions minus that 85px toolbar offset */
+  .wordmark { position:absolute; left:0; right:0; top:135px; text-align:center;
               font-size:76px; font-weight:700; letter-spacing:-1px;
               color:#665BFF; font-family:Arial, sans-serif; }
-  .searchbox { position:absolute; left:327px; top:352px; width:626px; height:46px;
+  .searchbox { position:absolute; left:327px; top:267px; width:626px; height:46px;
                border-radius:23px; background:#FFFFFF; box-shadow:0 1px 6px rgba(32,33,36,.18);
                display:flex; align-items:center; gap:12px; padding:0 16px; }
   .placeholder { flex:1; font-size:14.5px; color:#70757A; }
-  .shortcuts { position:absolute; left:0; right:0; top:432px; display:flex;
+  .shortcuts { position:absolute; left:0; right:0; top:347px; display:flex;
                justify-content:center; gap:66px; }
   .shortcut { width:96px; text-align:center; }
   .sicon { width:48px; height:48px; margin:0 auto 12px; border-radius:50%;
