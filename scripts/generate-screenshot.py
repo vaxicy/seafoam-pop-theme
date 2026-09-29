@@ -18,12 +18,14 @@ Output: store-assets/screenshots/screenshot-1-browser.png
 """
 
 import json
+import shutil
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = Path("store-assets") / "screenshots" / "screenshot-1-browser.png"
+SHOTS = Path("store-assets") / "screenshots" / "en"
+REFS = Path("store-assets") / "references"
 W, H = 1280, 800
 
 # browser-owned colours sampled from the user's real screenshot
@@ -133,6 +135,7 @@ def build_html(c):
       <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="{toolbar_icon}"
            stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6"/>
         <path d="M16 16l4 4"/></svg>
+      <div class="placeholder" style="font-size:13.5px">Search Google or type a URL</div>
       <div class="omni-icons">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="{ICON_GRAY}">
           <path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/>
@@ -190,18 +193,73 @@ def build_html(c):
 </body></html>"""
 
 
+def build_intro(c):
+    """Second store screenshot: the palette card, same layout as the other themes."""
+    bg = hexof(c["toolbar"])
+    ink = hexof(c["tab_text"])
+    muted = hexof(c["toolbar_button_icon"])
+    cards = [
+        ("Frame", hexof(c["frame"]), "Window frame &amp; active tab", ink),
+        ("Tab", hexof(c["background_tab"]), "Inactive tabs", ink),
+        ("White", "#FFFFFF", "Omnibox field", ink),
+        ("Ink", hexof(c["tab_text"]), "Text, icons &amp; headings", "#FFFFFF"),
+    ]
+    card_html = ""
+    for i, (name, col, use, txt) in enumerate(cards):
+        x = 76 + (i % 2) * 576
+        y = 244 + (i // 2) * 208
+        card_html += f"""
+    <div class="card" style="left:{x}px;top:{y}px;background:{col};color:{txt};
+         border:1px solid rgba(32,63,58,.14)">
+      <div class="cname">{name}</div>
+      <div class="cuse">{col} &middot; {use}</div>
+    </div>"""
+    return f"""<!doctype html><html><head><meta charset="utf-8"><style>
+  * {{ margin:0; padding:0; box-sizing:border-box; }}
+  body {{ width:{W}px; height:{H}px; background:{bg}; position:relative;
+         font-family:'Segoe UI', Arial, sans-serif; }}
+  .eyebrow {{ position:absolute; left:76px; top:60px; font-size:13px;
+             letter-spacing:3.2px; color:{muted}; text-transform:uppercase; }}
+  h1 {{ position:absolute; left:76px; top:84px; font-weight:400;
+        font-family:Georgia,'Times New Roman',serif; font-size:60px;
+        letter-spacing:-.5px; color:{ink}; }}
+  .sub {{ position:absolute; left:76px; top:176px; font-size:22px; color:{ink};
+          opacity:.82; }}
+  .card {{ position:absolute; width:552px; height:184px; border-radius:14px;
+          padding:0 34px; display:flex; flex-direction:column;
+          justify-content:flex-end; padding-bottom:32px; }}
+  .cname {{ font-size:27px; font-weight:700; margin-bottom:8px; }}
+  .cuse {{ font-size:17px; opacity:.86; }}
+  .foot {{ position:absolute; left:76px; top:664px; font-size:18px; color:{ink};
+          opacity:.72; }}
+</style></head><body>
+  <div class="eyebrow">A fresh, quiet workspace</div>
+  <h1>Seafoam Pop Theme</h1>
+  <div class="sub">Five colors. One calm, unhurried space.</div>{card_html}
+  <div class="foot">Solid colors &middot; Minimal design &middot; No wallpaper
+    &middot; No permissions required</div>
+</body></html>"""
+
+
 def main():
     c = json.loads((ROOT / "manifest.json").read_text(encoding="utf-8"))
-    html = build_html(c["theme"]["colors"])
-    OUT.parent.mkdir(parents=True, exist_ok=True)
+    shots = [("screenshot-1-browser", build_html(c["theme"]["colors"])),
+             ("screenshot-2-introduction", build_intro(c["theme"]["colors"]))]
+    SHOTS.mkdir(parents=True, exist_ok=True)
+    REFS.mkdir(parents=True, exist_ok=True)
     with sync_playwright() as p:
         browser = p.chromium.launch()
-        page = browser.new_page(viewport={"width": W, "height": H},
-                               device_scale_factor=1)
-        page.set_content(html, wait_until="load")
-        page.screenshot(path=str(OUT))
+        for name, html in shots:
+            page = browser.new_page(viewport={"width": W, "height": H},
+                                    device_scale_factor=1)
+            page.set_content(html, wait_until="load")
+            out = SHOTS / f"{name}.png"
+            page.screenshot(path=str(out))
+            page.close()
+            (REFS / f"{name}.html").write_text(html, encoding="utf-8")
+            shutil.copyfile(out, REFS / f"{name}.png")
+            print("wrote", out, W, H)
         browser.close()
-    print("wrote", OUT, W, H)
 
 
 if __name__ == "__main__":
